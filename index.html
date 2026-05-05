@@ -1011,38 +1011,99 @@
       flex: 1;
     }
 
-    /* ── RESPONSIVE ── */
+    /* ── RESPONSIVE 768px ── */
     @media (max-width: 768px) {
-      .sobre-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
+      /* Layout */
+      .sobre-grid        { grid-template-columns: 1fr; gap: 2rem; }
+      .cartografia-grid  { grid-template-columns: 1fr; gap: 2rem; }
+      .foro-form         { grid-template-columns: 1fr; }
+      .foro-form .full   { grid-column: 1; }
 
-      .cartografia-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
+      /* Secciones */
+      section { padding: 4rem 1.25rem; }
 
-      .foro-form {
-        grid-template-columns: 1fr;
-      }
+      /* Nav */
+      nav { padding: 0 1rem; height: 56px; }
+      .nav-logo { font-size: 1.15rem; }
+      .nav-links { gap: 0.6rem; }
+      .nav-links a { font-size: 0.75rem; letter-spacing: 0; }
 
-      .foro-form .full {
-        grid-column: 1;
-      }
+      /* Hero */
+      #hero { padding: 5rem 1.25rem 3rem; }
+      .hero-icons { gap: 0.75rem; }
+      .hero-icon-card { padding: 0.85rem 1.1rem; font-size: 1.7rem; border-radius: 14px; }
+      .hero-desc { font-size: 1rem; }
 
-      nav {
-        padding: 0 1.2rem;
-      }
+      /* Foro */
+      .foro-box { padding: 1.25rem 1rem; }
+      .foro-desc { font-size: 0.95rem; margin-bottom: 1.5rem; }
+      .foro-posts { max-height: 400px; }
 
-      .nav-links {
-        gap: 1rem;
-      }
+      /* Botón publicar */
+      .btn-publicar { width: 100%; text-align: center; }
 
-      .nav-links a {
-        font-size: 0.82rem;
-      }
+      /* Post header */
+      .post-header { flex-wrap: wrap; row-gap: 0.4rem; }
+      .post-tag { font-size: 0.68rem; padding: 0.15rem 0.6rem; }
+
+      /* Responder: apila nombre + botón en columna */
+      .reply-form-row { flex-direction: column; align-items: stretch; }
+      .btn-enviar-respuesta { width: 100%; }
+
+      /* Borrar: apila input + botón en columna */
+      .delete-confirm-row { flex-direction: column; align-items: stretch; }
+      .btn-confirmar-borrar { width: 100%; }
+
+      /* Libro */
+      .book-container { padding: 1.25rem 0.75rem; border-radius: 16px; }
+      .book-ctrl-btn { padding: 0.45rem 0.9rem; font-size: 0.8rem; }
+      .book-controls { gap: 0.5rem; }
     }
+
+    /* ── RESPONSIVE 480px (móviles pequeños) ── */
+    @media (max-width: 480px) {
+      /* Nav: comprime aún más */
+      nav { padding: 0 0.75rem; height: 52px; }
+      .nav-logo { font-size: 1rem; }
+      .nav-links { gap: 0.35rem; }
+      .nav-links a { font-size: 0.68rem; }
+
+      /* Secciones */
+      section { padding: 3rem 1rem; }
+      .section-title { font-size: clamp(1.7rem, 9vw, 2.4rem); }
+
+      /* Foro */
+      .foro-box { padding: 1rem 0.85rem; }
+      .foro-form input,
+      .foro-form textarea,
+      .foro-form select { font-size: 0.9rem; padding: 0.75rem 0.9rem; }
+      .foro-form textarea { min-height: 90px; }
+
+      /* Post cards */
+      .post-card { padding: 1rem; }
+      .post-avatar { width: 32px; height: 32px; font-size: 0.85rem; }
+      .post-name { font-size: 0.88rem; }
+      .post-body { font-size: 0.9rem; }
+      .post-tag { display: none; }   /* ya aparece en post-info */
+
+      /* Replies */
+      .reply-card { padding: 0.65rem 0.85rem; }
+      .reply-avatar { width: 24px; height: 24px; font-size: 0.65rem; }
+      .replies-list { padding-left: 0.65rem; }
+
+      /* Libro: controles en columna */
+      .book-controls { flex-direction: column; align-items: stretch; }
+      .book-ctrl-btn { text-align: center; }
+      .book-page-info { text-align: center; }
+
+      /* Sobre pillars */
+      .pillar { font-size: 0.85rem; padding: 0.6rem 0.85rem; }
+
+      /* Footer */
+      footer { padding: 2rem 1rem; }
+      .footer-title { font-size: 1.6rem; }
+    }
+
 
     /* ── LIBRO DIGITAL ── */
     .book-container {
