@@ -1198,23 +1198,12 @@
         <div class="cartilla-toolbar">
           <span>📄 Cartilla — Raíces en Movimiento</span>
           <div class="cartilla-toolbar-actions">
-            <label for="pdf-upload" class="btn-toolbar amarillo">⬆ Cargar PDF</label>
-            <input type="file" id="pdf-upload" accept="application/pdf" onchange="cargarPDF(event)" />
-            <button class="btn-toolbar" id="btn-fullscreen" onclick="toggleFullscreen()" style="display:none;">⛶
-              Pantalla completa</button>
-            <button class="btn-toolbar" id="btn-download" onclick="descargarPDF()" style="display:none;">⬇
-              Descargar</button>
+            <button class="btn-toolbar" id="btn-fullscreen" onclick="toggleFullscreen()">&#x26F6; Pantalla completa</button>
+            <a class="btn-toolbar amarillo" href="cartilla.pdf" download="cartilla-raices-en-movimiento.pdf">⬇ Descargar</a>
           </div>
         </div>
 
-        <div id="cartilla-placeholder" class="cartilla-placeholder">
-          <div class="cartilla-placeholder-icon">📚</div>
-          <p>La <strong>cartilla PASC</strong> se adjuntará próximamente.<br />
-            Si ya tienes el PDF, puedes cargarlo directamente aquí para previsualizarlo.</p>
-          <label for="pdf-upload" class="btn-upload-label">⬆ Cargar cartilla PDF</label>
-        </div>
-
-        <iframe id="cartilla-iframe" class="cartilla-embed" style="display:none;" title="Cartilla PASC"></iframe>
+        <iframe id="cartilla-iframe" class="cartilla-embed" src="cartilla.pdf" title="Cartilla PASC"></iframe>
       </div>
     </div>
   </section>
@@ -1767,25 +1756,6 @@
     // ─────────────────────────────────────────
     // CARTILLA PDF
     // ─────────────────────────────────────────
-    let currentPDFUrl = null;
-
-    function cargarPDF(event) {
-      const file = event.target.files[0];
-      if (!file || file.type !== 'application/pdf') return;
-
-      if (currentPDFUrl) URL.revokeObjectURL(currentPDFUrl);
-      currentPDFUrl = URL.createObjectURL(file);
-
-      const iframe = document.getElementById('cartilla-iframe');
-      const placeholder = document.getElementById('cartilla-placeholder');
-
-      iframe.src = currentPDFUrl;
-      iframe.style.display = 'block';
-      placeholder.style.display = 'none';
-      document.getElementById('btn-fullscreen').style.display = 'inline-block';
-      document.getElementById('btn-download').style.display = 'inline-block';
-    }
-
     function toggleFullscreen() {
       const iframe = document.getElementById('cartilla-iframe');
       if (!document.fullscreenElement) {
@@ -1793,14 +1763,6 @@
       } else {
         document.exitFullscreen?.();
       }
-    }
-
-    function descargarPDF() {
-      if (!currentPDFUrl) return;
-      const a = document.createElement('a');
-      a.href = currentPDFUrl;
-      a.download = 'cartilla-raices-en-movimiento.pdf';
-      a.click();
     }
 
     // ─────────────────────────────────────────
