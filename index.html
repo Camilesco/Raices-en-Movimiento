@@ -1888,8 +1888,8 @@
           images.push(canvas.toDataURL('image/jpeg', 0.88));
         }
 
-        // Init PageFlip
-        pageFlipInstance = new PageFlip(document.getElementById('flip-book'), {
+        // Init PageFlip (expuesto como St.PageFlip en el bundle del navegador)
+        pageFlipInstance = new St.PageFlip(document.getElementById('flip-book'), {
           width: pageWidth,
           height: pageHeight,
           maxShadowOpacity: 0.5,
