@@ -1043,6 +1043,90 @@
         font-size: 0.82rem;
       }
     }
+
+    /* ── LIBRO DIGITAL ── */
+    .book-container {
+      margin-top: 2rem;
+      background: rgba(0,0,0,0.25);
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .book-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 4rem 2rem;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.95rem;
+    }
+
+    .book-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255,255,255,0.15);
+      border-top-color: var(--amarillo);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .book-stage {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .book-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .book-ctrl-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .book-ctrl-btn:hover {
+      background: rgba(255,255,255,0.22);
+    }
+
+    .book-ctrl-download {
+      background: var(--amarillo);
+      color: var(--azul);
+      border-color: var(--amarillo);
+    }
+
+    .book-ctrl-download:hover {
+      background: #e6b800;
+    }
+
+    .book-page-info {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.88rem;
+      font-weight: 700;
+      min-width: 80px;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -1194,16 +1278,21 @@
         quieras.
       </p>
 
-      <div class="cartilla-viewer">
-        <div class="cartilla-toolbar">
-          <span>📄 Cartilla — Raíces en Movimiento</span>
-          <div class="cartilla-toolbar-actions">
-            <button class="btn-toolbar" id="btn-fullscreen" onclick="toggleFullscreen()">&#x26F6; Pantalla completa</button>
-            <a class="btn-toolbar amarillo" href="cartilla.pdf" download="cartilla-raices-en-movimiento.pdf">⬇ Descargar</a>
-          </div>
+      <div class="book-container" id="book-container">
+        <div class="book-loading" id="book-loading">
+          <div class="book-spinner"></div>
+          <p id="book-loading-text">Preparando el libro digital...</p>
         </div>
-
-        <iframe id="cartilla-iframe" class="cartilla-embed" src="cartilla.pdf" title="Cartilla PASC"></iframe>
+        <div class="book-stage" id="book-stage" style="display:none;">
+          <div id="flip-book"></div>
+        </div>
+        <div class="book-controls" id="book-controls" style="display:none;">
+          <button class="book-ctrl-btn" onclick="flipPrev()">← Anterior</button>
+          <span class="book-page-info" id="book-page-info">1 / 11</span>
+          <button class="book-ctrl-btn" onclick="flipNext()">Siguiente →</button>
+          <button class="book-ctrl-btn" onclick="toggleBookFullscreen()">⛶ Pantalla completa</button>
+          <a class="book-ctrl-btn book-ctrl-download" href="cartilla.pdf" download="cartilla-raices-en-movimiento.pdf">⬇ Descargar</a>
+        </div>
       </div>
     </div>
   </section>
@@ -1369,6 +1458,10 @@
       <div style="background:var(--azul-claro);"></div>
     </div>
   </footer>
+
+  <!-- PDF.js + StPageFlip -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
   <!-- ── JAVASCRIPT ── -->
   <script>
@@ -1754,15 +1847,86 @@
     }
 
     // ─────────────────────────────────────────
-    // CARTILLA PDF
+    // LIBRO DIGITAL (PDF.js + StPageFlip)
     // ─────────────────────────────────────────
-    function toggleFullscreen() {
-      const iframe = document.getElementById('cartilla-iframe');
-      if (!document.fullscreenElement) {
-        iframe.requestFullscreen?.();
-      } else {
-        document.exitFullscreen?.();
+    let pageFlipInstance = null;
+    let totalBookPages = 0;
+
+    async function initBook() {
+      try {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const loadingText = document.getElementById('book-loading-text');
+        const pdf = await pdfjsLib.getDocument('cartilla.pdf').promise;
+        totalBookPages = pdf.numPages;
+
+        // Calculate page dimensions from container
+        const container = document.getElementById('book-container');
+        const containerW = container.offsetWidth - 64;
+        const isPortrait = window.innerWidth < 768;
+        const pageWidth = isPortrait
+          ? Math.min(containerW - 32, 420)
+          : Math.min(Math.floor(containerW / 2), 560);
+
+        const firstPage = await pdf.getPage(1);
+        const nativeVP = firstPage.getViewport({ scale: 1 });
+        const scale = pageWidth / nativeVP.width;
+        const pageHeight = Math.round(nativeVP.height * scale);
+
+        // Render all pages to data URLs
+        const images = [];
+        for (let i = 1; i <= totalBookPages; i++) {
+          loadingText.textContent = `Cargando página ${i} de ${totalBookPages}...`;
+          const page = await pdf.getPage(i);
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const vp = page.getViewport({ scale: scale * dpr });
+          const canvas = document.createElement('canvas');
+          canvas.width = vp.width;
+          canvas.height = vp.height;
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+          images.push(canvas.toDataURL('image/jpeg', 0.88));
+        }
+
+        // Init PageFlip
+        pageFlipInstance = new PageFlip(document.getElementById('flip-book'), {
+          width: pageWidth,
+          height: pageHeight,
+          maxShadowOpacity: 0.5,
+          showCover: true,
+          usePortrait: isPortrait,
+          mobileScrollSupport: false,
+          flippingTime: 750,
+        });
+
+        pageFlipInstance.loadFromImages(images);
+        pageFlipInstance.on('flip', (e) => updateBookPageInfo(e.data));
+
+        document.getElementById('book-loading').style.display = 'none';
+        document.getElementById('book-stage').style.display = 'flex';
+        document.getElementById('book-controls').style.display = 'flex';
+        updateBookPageInfo(0);
+
+      } catch (err) {
+        document.getElementById('book-loading').innerHTML =
+          `<p style="color:rgba(255,255,255,0.6)">❌ No se pudo cargar el libro.<br>
+           <a href="cartilla.pdf" style="color:var(--amarillo)">⬇ Descargar PDF directamente</a></p>`;
+        console.error(err);
       }
+    }
+
+    function updateBookPageInfo(pageIdx) {
+      const el = document.getElementById('book-page-info');
+      if (el) el.textContent = `${pageIdx + 1} / ${totalBookPages}`;
+    }
+
+    function flipPrev() { pageFlipInstance?.flipPrev(); }
+    function flipNext() { pageFlipInstance?.flipNext(); }
+
+    function toggleBookFullscreen() {
+      const c = document.getElementById('book-container');
+      if (!document.fullscreenElement) c.requestFullscreen?.();
+      else document.exitFullscreen?.();
     }
 
     // ─────────────────────────────────────────
@@ -1788,6 +1952,7 @@
     // INIT
     // ─────────────────────────────────────────
     cargarPosts();
+    initBook();
     // Refresh every 30 seconds
     setInterval(cargarPosts, 30000);
   </script>
