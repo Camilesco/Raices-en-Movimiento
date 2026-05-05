@@ -1234,7 +1234,7 @@
 
         <div class="foro-form">
           <input type="text" id="input-nombre" placeholder="Tu nombre o apodo" maxlength="40" />
-          <select id="input-ciudad">
+          <select id="input-ciudad" onchange="toggleCiudadInput()">
             <option value="">¿De qué ciudad eres?</option>
             <option>Medellín</option>
             <option>Cali</option>
@@ -1246,8 +1246,11 @@
             <option>Pasto</option>
             <option>Santa Marta</option>
             <option>Ibagué</option>
-            <option>Otra ciudad</option>
+            <option value="Otra ciudad">Otra ciudad…</option>
           </select>
+          <input type="text" id="input-ciudad-custom" class="full"
+            placeholder="✍️ Escribe el nombre de tu ciudad" maxlength="40"
+            style="display:none;" />
           <textarea class="full" id="input-mensaje" placeholder="Escribe tu experiencia, consejo o pregunta..."
             maxlength="600"></textarea>
           <input class="full" type="text" id="input-clave"
@@ -1759,6 +1762,18 @@
         .replace(/"/g, '&quot;');
     }
 
+    function toggleCiudadInput() {
+      const select = document.getElementById('input-ciudad');
+      const custom = document.getElementById('input-ciudad-custom');
+      if (select.value === 'Otra ciudad') {
+        custom.style.display = 'block';
+        custom.focus();
+      } else {
+        custom.style.display = 'none';
+        custom.value = '';
+      }
+    }
+
     async function cargarPosts() {
       const container = document.getElementById('foro-posts');
 
@@ -1794,7 +1809,11 @@
 
     async function publicar() {
       const nombre = document.getElementById('input-nombre').value.trim();
-      const ciudad = document.getElementById('input-ciudad').value;
+      const selectCiudad = document.getElementById('input-ciudad').value;
+      const customCiudad = document.getElementById('input-ciudad-custom').value.trim();
+      const ciudad = selectCiudad === 'Otra ciudad'
+        ? (customCiudad || 'Otra ciudad')
+        : selectCiudad;
       const mensaje = document.getElementById('input-mensaje').value.trim();
       const status = document.getElementById('foro-status');
       const btn = document.getElementById('btn-publicar');
@@ -1834,6 +1853,8 @@
 
         document.getElementById('input-nombre').value = '';
         document.getElementById('input-ciudad').value = '';
+        document.getElementById('input-ciudad-custom').value = '';
+        document.getElementById('input-ciudad-custom').style.display = 'none';
         document.getElementById('input-mensaje').value = '';
         document.getElementById('input-clave').value = '';
         status.textContent = '✅ ¡Publicado!';
