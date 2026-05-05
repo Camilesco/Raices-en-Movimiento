@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raíces en Movimiento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --amarillo: #F5C800;
+      --azul: #1A3A8F;
+      --rojo: #D72638;
+      --crema: #FAF6EF;
+      --azul-claro: #4A90D9;
+      --texto: #1a1a2e;
+      --sombra: rgba(26, 58, 143, 0.13);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--crema);
+      color: var(--texto);
+      overflow-x: hidden;
+    }
+
+    /* ── DECORATIVE BLOBS ── */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--azul);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      box-shadow: 0 4px 24px rgba(26, 58, 143, 0.25);
+    }
+
+    .nav-logo {
+      font-family: 'Fredoka One', cursive;
+      color: var(--amarillo);
+      font-size: 1.45rem;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--amarillo);
+      border-radius: 2px;
+      transition: width 0.25s;
+    }
+
+    .nav-links a:hover {
+      color: var(--amarillo);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: var(--crema);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-stripe {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(to right, var(--amarillo) 0%, var(--amarillo) 50%, var(--rojo) 50%, var(--rojo) 66%, var(--azul) 66%, var(--azul) 100%);
+      clip-path: ellipse(110% 100% at 50% 100%);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--rojo);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 0.35rem 1.2rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      color: var(--azul);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    .hero-title span {
+      color: var(--rojo);
+    }
+
+    .hero-desc {
+      max-width: 560px;
+      font-size: 1.1rem;
+      color: #444;
+      line-height: 1.7;
+      animation: fadeUp 0.8s ease 0.2s both;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-icons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .hero-icon-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 1.2rem 1.8rem;
+      font-size: 2.2rem;
+      box-shadow: 0 8px 32px var(--sombra);
+      border: 3px solid transparent;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .hero-icon-card:hover {
+      transform: translateY(-6px) rotate(-3deg);
+      border-color: var(--amarillo);
+    }
+
+    /* floating blobs background */
+    .floater {
+      position: absolute;
+      pointer-events: none;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .floater:nth-child(2) {
+      animation-delay: -2s;
+    }
+
+    .floater:nth-child(3) {
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-18px) rotate(5deg);
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 6rem 2rem;
+      position: relative;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--amarillo);
+      color: var(--azul);
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      color: var(--azul);
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    .section-title span {
+      color: var(--rojo);
+    }
+
+    /* ── SOBRE EL PROYECTO ── */
+    #sobre {
+      background: #fff;
+    }
+
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .sobre-text p {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: #444;
+    }
+
+    .sobre-visual {
+      position: relative;
+    }
+
+    .sobre-card {
+      background: var(--crema);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 12px 48px var(--sombra);
+      border: 3px solid var(--amarillo);
+      text-align: center;
+    }
+
+    .sobre-card .big-emoji {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .sobre-pillars {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .pillar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--azul);
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+
+    .pillar-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── FORO ── */
+    #foro {
+      background: var(--azul);
+      color: #fff;
+    }
+
+    #foro .section-title {
+      color: #fff;
+    }
+
+    #foro .section-title span {
+      color: var(--amarillo);
+    }
+
+    #foro .section-tag {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+    .foro-desc {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 1.05rem;
+      margin-bottom: 2.5rem;
+      max-width: 600px;
+    }
+
+    .foro-box {
+      background: rgba(255, 255, 255, 0.07);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 2rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .foro-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .foro-form input,
+    .foro-form textarea,
+    .foro-form select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.12);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 0.85rem 1.1rem;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .foro-form input::placeholder,
+    .foro-form textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .foro-form input:focus,
+    .foro-form textarea:focus,
+    .foro-form select:focus {
+      border-color: var(--amarillo);
+    }
+
+    .foro-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .foro-form textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .foro-form select option {
+      background: var(--azul);
+      color: #fff;
+    }
+
+    .btn-publicar {
+      background: var(--amarillo);
+      color: var(--azul);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      padding: 0.85rem 2.5rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(245, 200, 0, 0.3);
+    }
+
+    .btn-publicar:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(245, 200, 0, 0.45);
+    }
+
+    .btn-publicar:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Posts */
+    .foro-posts {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .foro-posts::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .foro-posts::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+
+    .foro-posts::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+
+    .post-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 1.2rem 1.4rem;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .post-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .post-meta {
+      flex: 1;
+    }
+
+    .post-name {
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .post-info {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .post-tag {
+      background: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .post-body {
+      font-size: 0.97rem;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .foro-empty {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 0.95rem;
+      padding: 2rem;
+    }
+
+    .foro-status {
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      min-height: 1.2em;
+      color: var(--amarillo);
+      font-weight: 700;
+    }
+
+    .supabase-banner {
+      background: rgba(245, 200, 0, 0.12);
+      border: 2px dashed rgba(245, 200, 0, 0.4);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .supabase-banner strong {
+      color: var(--amarillo);
+    }
+
+    /* ── CARTILLA ── */
+    #cartilla {
+      background: var(--crema);
+    }
+
+    .cartilla-viewer {
+      margin-top: 2rem;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 12px 48px var(--sombra);
+      overflow: hidden;
+      border: 3px solid var(--amarillo);
+    }
+
+    .cartilla-toolbar {
+      background: var(--azul);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .cartilla-toolbar span {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .cartilla-toolbar-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn-toolbar {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 0.4rem 1rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-toolbar:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-toolbar.amarillo {
+      background: var(--amarillo);
+      color: var(--azul);
+      border-color: var(--amarillo);
+    }
+
+    .cartilla-embed {
+      width: 100%;
+      height: 680px;
+      border: none;
+      display: block;
+    }
+
+    .cartilla-placeholder {
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      background: repeating-linear-gradient(45deg,
+          #f8f4ec,
+          #f8f4ec 10px,
+          #fff 10px,
+          #fff 20px);
+    }
+
+    .cartilla-placeholder-icon {
+      font-size: 4rem;
+    }
+
+    .cartilla-placeholder p {
+      font-size: 1rem;
+      color: #888;
+      text-align: center;
+      max-width: 380px;
+      line-height: 1.6;
+    }
+
+    .cartilla-placeholder strong {
+      color: var(--azul);
+    }
+
+    .btn-upload-label {
+      display: inline-block;
+      background: var(--azul);
+      color: #fff;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      padding: 0.75rem 2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px var(--sombra);
+    }
+
+    .btn-upload-label:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px var(--sombra);
+    }
+
+    #pdf-upload {
+      display: none;
+    }
+
+    /* ── CARTOGRAFÍA ── */
+    #cartografia {
+      background: #fff;
+    }
+
+    .cartografia-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 4rem;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .cartografia-info p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    .cartografia-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .ctag {
+      background: var(--crema);
+      border: 2px solid var(--azul);
+      color: var(--azul);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+    }
+
+    .mapa-container {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 16px 56px var(--sombra);
+      border: 4px solid var(--amarillo);
+    }
+
+    .mapa-container img {
+      width: 100%;
+      display: block;
+      filter: contrast(1.05);
+    }
+
+    .mapa-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(26, 58, 143, 0.85));
+      padding: 1.5rem;
+      color: #fff;
+    }
+
+    .mapa-overlay strong {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+    }
+
+    .mapa-overlay p {
+      font-size: 0.82rem;
+      opacity: 0.8;
+      margin-top: 0.25rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--azul);
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-title {
+      font-family: 'Fredoka One', cursive;
+      color: var(--amarillo);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-sub {
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-stripe {
+      display: flex;
+      height: 6px;
+      margin-top: 2rem;
+    }
+
+    .footer-stripe div {
+      flex: 1;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .sobre-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .cartografia-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .foro-form {
+        grid-template-columns: 1fr;
+      }
+
+      .foro-form .full {
+        grid-column: 1;
+      }
+
+      nav {
+        padding: 0 1.2rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .nav-links a {
+        font-size: 0.82rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">🌱 Raíces en Movimiento</div>
+    <ul class="nav-links">
+      <li><a href="#sobre">El Proyecto</a></li>
+      <li><a href="#foro">Foro</a></li>
+      <li><a href="#cartilla">Cartilla</a></li>
+      <li><a href="#cartografia">Cartografía</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <!-- floating decorations -->
+    <div class="floater" style="top:15%;left:5%;font-size:3rem;opacity:0.3;">🌸</div>
+    <div class="floater" style="top:20%;right:8%;font-size:2.5rem;opacity:0.25;">🗺️</div>
+    <div class="floater" style="bottom:20%;left:10%;font-size:2rem;opacity:0.2;">☕</div>
+    <div class="floater" style="bottom:25%;right:6%;font-size:2.8rem;opacity:0.25;">🏔️</div>
+
+    <div class="hero-tag">✦ Estudio Cualitativo</div>
+    <h1 class="hero-title">Raíces en<br><span>Movimiento</span></h1>
+    <p class="hero-desc">
+      Un proyecto que visibiliza las experiencias de estudiantes universitarios foráneos que viven en Bogotá — sus
+      identidades, adaptaciones y nuevas formas de habitar la ciudad.
+    </p>
+    <div class="hero-icons">
+      <div class="hero-icon-card">🇨🇴</div>
+      <div class="hero-icon-card">🎓</div>
+      <div class="hero-icon-card">🏙️</div>
+      <div class="hero-icon-card">🤝</div>
+    </div>
+    <div class="hero-stripe"></div>
+  </section>
+
+  <!-- SOBRE EL PROYECTO -->
+  <section id="sobre">
+    <div class="section-inner">
+      <div class="sobre-grid">
+        <div class="sobre-text">
+          <div class="section-tag">01 ✦ El Proyecto</div>
+          <h2 class="section-title">¿Qué es <span>Raíces en</span> Movimiento?</h2>
+          <p>
+            Raíces en Movimiento es un proyecto que busca reconocer y visibilizar las experiencias de estudiantes
+            universitarios foráneos que viven en Bogotá. Llegar a una nueva ciudad no significa solamente cambiar de
+            lugar, sino también aprender a habitar nuevos espacios, construir redes de apoyo, asumir responsabilidades y
+            negociar el sentido de pertenencia entre el lugar de origen y la vida universitaria.
+          </p>
+          <br />
+          <p>
+            A partir de las voces de estudiantes foráneos, esta página invita a reflexionar sobre cómo la identidad se
+            transforma, se conserva y se reconstruye en medio de la adaptación, los vínculos y las nuevas formas de
+            vivir la universidad.
+          </p>
+        </div>
+
+        <div class="sobre-visual">
+          <div class="sobre-card">
+            <span class="big-emoji">🌱</span>
+            <p style="font-weight:800;font-size:1.1rem;color:var(--azul);margin-bottom:1rem;">Ejes del estudio</p>
+            <div class="sobre-pillars">
+              <div class="pillar">
+                <div class="pillar-dot" style="background:var(--amarillo);"></div>
+                Identidad y pertenencia
+              </div>
+              <div class="pillar">
+                <div class="pillar-dot" style="background:var(--rojo);"></div>
+                Adaptación a Bogotá
+              </div>
+              <div class="pillar">
+                <div class="pillar-dot" style="background:var(--azul-claro);"></div>
+                Redes de apoyo universitario
+              </div>
+              <div class="pillar">
+                <div class="pillar-dot" style="background:var(--azul);"></div>
+                Voces de estudiantes foráneos
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORO -->
+  <section id="foro">
+    <div class="section-inner">
+      <div class="section-tag">02 ✦ Foro</div>
+      <h2 class="section-title">Foro de <span>Estudiantes</span></h2>
+      <p class="foro-desc">
+        Comparte herramientas que te han funcionado, plantea tus dudas sobre la adaptación a Bogotá y genera
+        conversación con otros estudiantes foráneos.
+      </p>
+
+      <div class="foro-box">
+        <div class="supabase-banner" id="supabase-banner">
+          ⚙️ <strong>Configuración pendiente:</strong> el foro necesita conectarse a Supabase para persistir los
+          mensajes. Sigue las instrucciones del <code>README.md</code> y actualiza las variables
+          <code>SUPABASE_URL</code> y <code>SUPABASE_KEY</code> en el <code>config.js</code>.
+        </div>
+
+        <div class="foro-form">
+          <input type="text" id="input-nombre" placeholder="Tu nombre o apodo" maxlength="40" />
+          <select id="input-ciudad">
+            <option value="">¿De qué ciudad eres?</option>
+            <option>Medellín</option>
+            <option>Cali</option>
+            <option>Barranquilla</option>
+            <option>Cartagena</option>
+            <option>Bucaramanga</option>
+            <option>Manizales</option>
+            <option>Pereira</option>
+            <option>Pasto</option>
+            <option>Santa Marta</option>
+            <option>Ibagué</option>
+            <option>Otra ciudad</option>
+          </select>
+          <textarea class="full" id="input-mensaje" placeholder="Escribe tu experiencia, consejo o pregunta..."
+            maxlength="600"></textarea>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <button class="btn-publicar" id="btn-publicar" onclick="publicar()">
+            ✦ Publicar en el foro
+          </button>
+          <div class="foro-status" id="foro-status"></div>
+        </div>
+
+        <div class="foro-posts" id="foro-posts">
+          <div class="foro-empty">Cargando mensajes del foro...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARTILLA -->
+  <section id="cartilla">
+    <div class="section-inner">
+      <div class="section-tag">03 ✦ Cartilla</div>
+      <h2 class="section-title">La <span>Cartilla</span> PASC</h2>
+      <p style="color:#555;font-size:1.05rem;max-width:600px;line-height:1.7;">
+        Aquí puedes explorar la cartilla del proyecto. Ábrela en pantalla completa o descárgala para consultarla cuando
+        quieras.
+      </p>
+
+      <div class="cartilla-viewer">
+        <div class="cartilla-toolbar">
+          <span>📄 Cartilla — Raíces en Movimiento</span>
+          <div class="cartilla-toolbar-actions">
+            <label for="pdf-upload" class="btn-toolbar amarillo">⬆ Cargar PDF</label>
+            <input type="file" id="pdf-upload" accept="application/pdf" onchange="cargarPDF(event)" />
+            <button class="btn-toolbar" id="btn-fullscreen" onclick="toggleFullscreen()" style="display:none;">⛶
+              Pantalla completa</button>
+            <button class="btn-toolbar" id="btn-download" onclick="descargarPDF()" style="display:none;">⬇
+              Descargar</button>
+          </div>
+        </div>
+
+        <div id="cartilla-placeholder" class="cartilla-placeholder">
+          <div class="cartilla-placeholder-icon">📚</div>
+          <p>La <strong>cartilla PASC</strong> se adjuntará próximamente.<br />
+            Si ya tienes el PDF, puedes cargarlo directamente aquí para previsualizarlo.</p>
+          <label for="pdf-upload" class="btn-upload-label">⬆ Cargar cartilla PDF</label>
+        </div>
+
+        <iframe id="cartilla-iframe" class="cartilla-embed" style="display:none;" title="Cartilla PASC"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARTOGRAFÍA SOCIAL -->
+  <section id="cartografia">
+    <div class="section-inner">
+      <div class="section-tag">04 ✦ Cartografía</div>
+      <h2 class="section-title">Cartografía <span>Social</span></h2>
+
+      <div class="cartografia-grid">
+        <div class="cartografia-info">
+          <p>
+            La cartografía social es una herramienta participativa en la que los estudiantes foráneos marcaron sobre el
+            croquis de Bogotá los lugares que habitan, recorren y significan en su vida universitaria.
+          </p>
+          <p>
+            Esta imagen refleja cómo los estudiantes construyen su propio mapa afectivo de la ciudad: zonas de confort,
+            lugares de encuentro, sitios que representan desafíos y espacios que se volvieron hogar.
+          </p>
+          <div class="cartografia-tags">
+            <span class="ctag">🏫 Campus universitarios</span>
+            <span class="ctag">🏘️ Barrios habitados</span>
+            <span class="ctag">🚇 Rutas del día a día</span>
+            <span class="ctag">☕ Puntos de encuentro</span>
+            <span class="ctag">🌳 Espacios de descanso</span>
+          </div>
+        </div>
+
+        <div class="mapa-container">
+          <!-- Bogotá silhouette rendered as SVG (based on croquis from PDF) -->
+          <svg viewBox="0 0 600 480" xmlns="http://www.w3.org/2000/svg"
+            style="width:100%;display:block;background:#eef3f8;">
+            <!-- Background -->
+            <rect width="600" height="480" fill="#dce8f0" />
+
+            <!-- Grid lines subtle -->
+            <g stroke="#c8d8e8" stroke-width="1" opacity="0.5">
+              <line x1="0" y1="80" x2="600" y2="80" />
+              <line x1="0" y1="160" x2="600" y2="160" />
+              <line x1="0" y1="240" x2="600" y2="240" />
+              <line x1="0" y1="320" x2="600" y2="320" />
+              <line x1="0" y1="400" x2="600" y2="400" />
+              <line x1="120" y1="0" x2="120" y2="480" />
+              <line x1="240" y1="0" x2="240" y2="480" />
+              <line x1="360" y1="0" x2="360" y2="480" />
+              <line x1="480" y1="0" x2="480" y2="480" />
+            </g>
+
+            <!-- Bogotá outline (stylized croquis shape) -->
+            <path d="
+              M 160 60
+              L 200 45
+              L 260 42
+              L 320 48
+              L 380 55
+              L 420 70
+              L 440 95
+              L 450 130
+              L 455 165
+              L 458 200
+              L 452 240
+              L 445 275
+              L 440 310
+              L 430 345
+              L 415 375
+              L 395 400
+              L 365 420
+              L 330 430
+              L 290 435
+              L 250 430
+              L 210 420
+              L 175 405
+              L 148 385
+              L 130 360
+              L 118 330
+              L 110 295
+              L 108 260
+              L 110 225
+              L 115 190
+              L 120 155
+              L 128 120
+              L 138 90
+              Z
+            " fill="#f5c800" stroke="#1A3A8F" stroke-width="3" opacity="0.9" />
+
+            <!-- Interior divisions (localidades) -->
+            <g stroke="#1A3A8F" stroke-width="1.5" stroke-dasharray="6,4" fill="none" opacity="0.5">
+              <line x1="285" y1="42" x2="285" y2="435" />
+              <line x1="108" y1="240" x2="458" y2="240" />
+              <line x1="160" y1="140" x2="450" y2="140" />
+              <line x1="140" y1="340" x2="440" y2="340" />
+              <path d="M 200 42 Q 220 150 210 260" />
+              <path d="M 360 48 Q 380 160 375 280" />
+            </g>
+
+            <!-- Location pins -->
+            <g>
+              <!-- Pin 1: Norte (Usaquén/Chapinero) -->
+              <circle cx="300" cy="110" r="14" fill="#D72638" opacity="0.9" />
+              <text x="300" y="115" text-anchor="middle" fill="white" font-size="14" font-family="Arial">📌</text>
+              <text x="320" y="108" fill="#1A3A8F" font-size="11" font-weight="bold" font-family="Arial">Zona
+                Norte</text>
+
+              <!-- Pin 2: Centro -->
+              <circle cx="285" cy="230" r="16" fill="#1A3A8F" opacity="0.9" />
+              <text x="285" y="236" text-anchor="middle" fill="white" font-size="15" font-family="Arial">🏛</text>
+              <text x="308" y="228" fill="#1A3A8F" font-size="11" font-weight="bold" font-family="Arial">Centro</text>
+
+              <!-- Pin 3: Sur -->
+              <circle cx="280" cy="360" r="14" fill="#F5C800" opacity="0.9" stroke="#1A3A8F" stroke-width="2" />
+              <text x="280" y="365" text-anchor="middle" fill="#1A3A8F" font-size="13" font-family="Arial">🏘</text>
+              <text x="300" y="360" fill="#1A3A8F" font-size="11" font-weight="bold" font-family="Arial">Zona Sur</text>
+
+              <!-- Pin 4: Occidente -->
+              <circle cx="175" cy="250" r="13" fill="#4A90D9" opacity="0.9" />
+              <text x="175" y="255" text-anchor="middle" fill="white" font-size="12" font-family="Arial">🎓</text>
+              <text x="145" y="275" fill="#1A3A8F" font-size="10" font-weight="bold"
+                font-family="Arial">Occidente</text>
+
+              <!-- Pin 5: Oriente (sabana) -->
+              <circle cx="400" cy="200" r="13" fill="#D72638" opacity="0.7" />
+              <text x="400" y="205" text-anchor="middle" fill="white" font-size="12" font-family="Arial">☕</text>
+              <text x="415" y="198" fill="#1A3A8F" font-size="10" font-weight="bold" font-family="Arial">Oriente</text>
+            </g>
+
+            <!-- Legend box -->
+            <rect x="20" y="360" width="140" height="108" rx="10" fill="white" opacity="0.85" stroke="#1A3A8F"
+              stroke-width="1.5" />
+            <text x="90" y="380" text-anchor="middle" fill="#1A3A8F" font-size="11" font-weight="bold"
+              font-family="Arial">Cartografía social</text>
+            <circle cx="38" cy="398" r="6" fill="#D72638" />
+            <text x="50" y="402" fill="#333" font-size="10" font-family="Arial">Zonas habitadas</text>
+            <circle cx="38" cy="416" r="6" fill="#1A3A8F" />
+            <text x="50" y="420" fill="#333" font-size="10" font-family="Arial">Campus univers.</text>
+            <circle cx="38" cy="434" r="6" fill="#F5C800" stroke="#1A3A8F" stroke-width="1" />
+            <text x="50" y="438" fill="#333" font-size="10" font-family="Arial">Puntos de encuentro</text>
+            <circle cx="38" cy="452" r="6" fill="#4A90D9" />
+            <text x="50" y="456" fill="#333" font-size="10" font-family="Arial">Rutas cotidianas</text>
+
+            <!-- Title -->
+            <text x="300" y="25" text-anchor="middle" fill="#1A3A8F" font-size="14" font-weight="bold"
+              font-family="Arial">Croquis de Bogotá — Estudiantes Foráneos</text>
+          </svg>
+
+          <div class="mapa-overlay">
+            <strong>🗺️ Croquis Social de Bogotá</strong>
+            <p>Elaborado por estudiantes foráneos universitarios · Imagen placeholder</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-title">Raíces en Movimiento</div>
+    <div class="footer-sub">Estudio Cualitativo · Bogotá, Colombia</div>
+    <p style="font-size:0.82rem;">Hecho con ❤️ por y para estudiantes foráneos que construyen hogar en Bogotá.</p>
+    <div class="footer-stripe">
+      <div style="background:var(--amarillo);"></div>
+      <div style="background:var(--rojo);"></div>
+      <div style="background:var(--azul-claro);"></div>
+    </div>
+  </footer>
+
+  <!-- ── JAVASCRIPT ── -->
+  <script>
+    // ─────────────────────────────────────────
+    // SUPABASE CONFIG
+    // Reemplaza estos valores con los tuyos
+    // ─────────────────────────────────────────
+    const SUPABASE_URL = 'https://iaylymluuedolbfniwmd.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheWx5bWx1dWVkb2xiZm5pd21kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MzMxMDIsImV4cCI6MjA5MzUwOTEwMn0.KKv5c1GyNEnkB7KCs2GHBuZv0dmK5WeMctaVP6gRe1w';
+    const TABLE_NAME = 'foro_posts';
+
+    const supabaseConfigured =
+      SUPABASE_URL !== 'TU_SUPABASE_URL' &&
+      SUPABASE_KEY !== 'TU_SUPABASE_ANON_KEY';
+
+    // ─────────────────────────────────────────
+    // FORO
+    // ─────────────────────────────────────────
+    const AVATAR_COLORS = ['#D72638', '#1A3A8F', '#F5C800', '#4A90D9', '#2ecc71', '#e67e22', '#9b59b6'];
+
+    function getAvatarColor(name) {
+      let hash = 0;
+      for (let c of name) hash = c.charCodeAt(0) + hash * 31;
+      return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+    }
+
+    function initials(name) {
+      return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    }
+
+    function timeAgo(iso) {
+      const diff = Date.now() - new Date(iso).getTime();
+      const m = Math.floor(diff / 60000);
+      if (m < 1) return 'ahora mismo';
+      if (m < 60) return `hace ${m} min`;
+      const h = Math.floor(m / 60);
+      if (h < 24) return `hace ${h}h`;
+      return `hace ${Math.floor(h / 24)}d`;
+    }
+
+    function renderPost(post) {
+      const color = getAvatarColor(post.nombre);
+      const isAmarillo = color === '#F5C800';
+      const textColor = isAmarillo ? '#1A3A8F' : '#fff';
+      return `
+        <div class="post-card">
+          <div class="post-header">
+            <div class="post-avatar" style="background:${color};color:${textColor};">
+              ${initials(post.nombre)}
+            </div>
+            <div class="post-meta">
+              <div class="post-name">${escapeHTML(post.nombre)}</div>
+              <div class="post-info">
+                ${post.ciudad ? `📍 ${escapeHTML(post.ciudad)} · ` : ''}
+                ${timeAgo(post.created_at)}
+              </div>
+            </div>
+            ${post.ciudad ? `<span class="post-tag">${escapeHTML(post.ciudad)}</span>` : ''}
+          </div>
+          <p class="post-body">${escapeHTML(post.mensaje)}</p>
+        </div>
+      `;
+    }
+
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function cargarPosts() {
+      const container = document.getElementById('foro-posts');
+
+      if (!supabaseConfigured) {
+        container.innerHTML = `
+          <div class="foro-empty">
+            ⚙️ Conecta Supabase para ver y publicar mensajes.<br/>
+            Sigue las instrucciones del <strong>README.md</strong>.
+          </div>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?order=created_at.desc&limit=50`,
+          { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+        );
+        const posts = await res.json();
+
+        document.getElementById('supabase-banner').style.display = 'none';
+
+        if (!Array.isArray(posts) || posts.length === 0) {
+          container.innerHTML = `<div class="foro-empty">¡Sé el primero en compartir tu experiencia! 🌱</div>`;
+          return;
+        }
+        container.innerHTML = posts.map(renderPost).join('');
+      } catch (e) {
+        container.innerHTML = `<div class="foro-empty">Error al cargar mensajes. Verifica la configuración de Supabase.</div>`;
+      }
+    }
+
+    async function publicar() {
+      const nombre = document.getElementById('input-nombre').value.trim();
+      const ciudad = document.getElementById('input-ciudad').value;
+      const mensaje = document.getElementById('input-mensaje').value.trim();
+      const status = document.getElementById('foro-status');
+      const btn = document.getElementById('btn-publicar');
+
+      if (!nombre || !mensaje) {
+        status.textContent = '⚠️ Escribe tu nombre y tu mensaje.';
+        return;
+      }
+      if (mensaje.length < 10) {
+        status.textContent = '⚠️ El mensaje es muy corto.';
+        return;
+      }
+      if (!supabaseConfigured) {
+        status.textContent = '⚠️ Primero configura Supabase (ver README).';
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = 'Publicando...';
+
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/${TABLE_NAME}`,
+          {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({ nombre, ciudad, mensaje })
+          }
+        );
+
+        if (!res.ok) throw new Error(await res.text());
+
+        document.getElementById('input-nombre').value = '';
+        document.getElementById('input-ciudad').value = '';
+        document.getElementById('input-mensaje').value = '';
+        status.textContent = '✅ ¡Publicado!';
+        await cargarPosts();
+        setTimeout(() => status.textContent = '', 3000);
+      } catch (e) {
+        status.textContent = '❌ Error al publicar. Intenta de nuevo.';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // ─────────────────────────────────────────
+    // CARTILLA PDF
+    // ─────────────────────────────────────────
+    let currentPDFUrl = null;
+
+    function cargarPDF(event) {
+      const file = event.target.files[0];
+      if (!file || file.type !== 'application/pdf') return;
+
+      if (currentPDFUrl) URL.revokeObjectURL(currentPDFUrl);
+      currentPDFUrl = URL.createObjectURL(file);
+
+      const iframe = document.getElementById('cartilla-iframe');
+      const placeholder = document.getElementById('cartilla-placeholder');
+
+      iframe.src = currentPDFUrl;
+      iframe.style.display = 'block';
+      placeholder.style.display = 'none';
+      document.getElementById('btn-fullscreen').style.display = 'inline-block';
+      document.getElementById('btn-download').style.display = 'inline-block';
+    }
+
+    function toggleFullscreen() {
+      const iframe = document.getElementById('cartilla-iframe');
+      if (!document.fullscreenElement) {
+        iframe.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    }
+
+    function descargarPDF() {
+      if (!currentPDFUrl) return;
+      const a = document.createElement('a');
+      a.href = currentPDFUrl;
+      a.download = 'cartilla-raices-en-movimiento.pdf';
+      a.click();
+    }
+
+    // ─────────────────────────────────────────
+    // SCROLL ANIMATIONS
+    // ─────────────────────────────────────────
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('section:not(#hero)').forEach(s => {
+      s.style.opacity = '0';
+      s.style.transform = 'translateY(32px)';
+      s.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
+      observer.observe(s);
+    });
+
+    // ─────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────
+    cargarPosts();
+    // Refresh every 30 seconds
+    setInterval(cargarPosts, 30000);
+  </script>
+</body>
+
+</html>
