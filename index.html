@@ -527,6 +527,158 @@
       font-weight: 700;
     }
 
+    /* ── RESPUESTAS ── */
+    .btn-responder {
+      background: none;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      padding: 0.3rem 0.9rem;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.75rem;
+    }
+
+    .btn-responder:hover {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    .reply-form {
+      margin-top: 0.9rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      display: none;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .reply-form.open {
+      display: flex;
+    }
+
+    .reply-form input,
+    .reply-form textarea {
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 0.65rem 0.9rem;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+
+    .reply-form input::placeholder,
+    .reply-form textarea::placeholder {
+      color: rgba(255,255,255,0.45);
+    }
+
+    .reply-form input:focus,
+    .reply-form textarea:focus {
+      border-color: var(--amarillo);
+    }
+
+    .reply-form-row {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .reply-form-row input {
+      flex: 1;
+    }
+
+    .btn-enviar-respuesta {
+      background: var(--amarillo);
+      color: var(--azul);
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.92rem;
+      border: none;
+      border-radius: 10px;
+      padding: 0.65rem 1.4rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-enviar-respuesta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(245,200,0,0.4);
+    }
+
+    .btn-enviar-respuesta:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .reply-status {
+      font-size: 0.78rem;
+      color: var(--amarillo);
+      font-weight: 700;
+      min-height: 1em;
+    }
+
+    .replies-list {
+      margin-top: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      padding-left: 1rem;
+      border-left: 3px solid rgba(255,255,255,0.15);
+    }
+
+    .reply-card {
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .reply-header {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .reply-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.72rem;
+      flex-shrink: 0;
+    }
+
+    .reply-name {
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .reply-time {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.45);
+      margin-left: auto;
+    }
+
+    .reply-body {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.82);
+    }
+
     .supabase-banner {
       background: rgba(245, 200, 0, 0.12);
       border: 2px dashed rgba(245, 200, 0, 0.4);
@@ -1174,7 +1326,7 @@
       const isAmarillo = color === '#F5C800';
       const textColor = isAmarillo ? '#1A3A8F' : '#fff';
       return `
-        <div class="post-card">
+        <div class="post-card" id="post-${post.id}">
           <div class="post-header">
             <div class="post-avatar" style="background:${color};color:${textColor};">
               ${initials(post.nombre)}
@@ -1189,8 +1341,125 @@
             ${post.ciudad ? `<span class="post-tag">${escapeHTML(post.ciudad)}</span>` : ''}
           </div>
           <p class="post-body">${escapeHTML(post.mensaje)}</p>
+
+          <!-- Respuestas -->
+          <div class="replies-list" id="replies-${post.id}"></div>
+
+          <button class="btn-responder" onclick="toggleReplyForm('${post.id}')">
+            💬 Responder
+          </button>
+
+          <div class="reply-form" id="reply-form-${post.id}">
+            <div class="reply-form-row">
+              <input type="text" id="reply-nombre-${post.id}" placeholder="Tu nombre o apodo" maxlength="40" />
+              <button class="btn-enviar-respuesta" id="reply-btn-${post.id}"
+                onclick="publicarRespuesta('${post.id}')">
+                ✦ Enviar
+              </button>
+            </div>
+            <textarea id="reply-mensaje-${post.id}" placeholder="Escribe tu respuesta..." maxlength="400" rows="3"></textarea>
+            <div class="reply-status" id="reply-status-${post.id}"></div>
+          </div>
         </div>
       `;
+    }
+
+    function renderReply(reply) {
+      const color = getAvatarColor(reply.nombre);
+      const isAmarillo = color === '#F5C800';
+      const textColor = isAmarillo ? '#1A3A8F' : '#fff';
+      return `
+        <div class="reply-card">
+          <div class="reply-header">
+            <div class="reply-avatar" style="background:${color};color:${textColor};">
+              ${initials(reply.nombre)}
+            </div>
+            <span class="reply-name">${escapeHTML(reply.nombre)}</span>
+            <span class="reply-time">${timeAgo(reply.created_at)}</span>
+          </div>
+          <p class="reply-body">${escapeHTML(reply.mensaje)}</p>
+        </div>
+      `;
+    }
+
+    function toggleReplyForm(postId) {
+      const form = document.getElementById(`reply-form-${postId}`);
+      form.classList.toggle('open');
+      if (form.classList.contains('open')) {
+        document.getElementById(`reply-nombre-${postId}`).focus();
+      }
+    }
+
+    async function cargarRespuestas(postId) {
+      if (!supabaseConfigured) return;
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/foro_respuestas?post_id=eq.${postId}&order=created_at.asc`,
+          { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+        );
+        const replies = await res.json();
+        const container = document.getElementById(`replies-${postId}`);
+        if (!container) return;
+        if (Array.isArray(replies) && replies.length > 0) {
+          container.innerHTML = replies.map(renderReply).join('');
+        } else {
+          container.innerHTML = '';
+        }
+      } catch (e) { /* silencioso */ }
+    }
+
+    async function publicarRespuesta(postId) {
+      const nombre = document.getElementById(`reply-nombre-${postId}`).value.trim();
+      const mensaje = document.getElementById(`reply-mensaje-${postId}`).value.trim();
+      const status = document.getElementById(`reply-status-${postId}`);
+      const btn = document.getElementById(`reply-btn-${postId}`);
+
+      if (!nombre || !mensaje) {
+        status.textContent = '⚠️ Escribe tu nombre y tu respuesta.';
+        return;
+      }
+      if (mensaje.length < 5) {
+        status.textContent = '⚠️ La respuesta es muy corta.';
+        return;
+      }
+      if (!supabaseConfigured) {
+        status.textContent = '⚠️ Supabase no configurado.';
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = 'Enviando...';
+
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/foro_respuestas`,
+          {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({ post_id: postId, nombre, mensaje })
+          }
+        );
+
+        if (!res.ok) throw new Error(await res.text());
+
+        document.getElementById(`reply-nombre-${postId}`).value = '';
+        document.getElementById(`reply-mensaje-${postId}`).value = '';
+        status.textContent = '✅ ¡Respuesta enviada!';
+        await cargarRespuestas(postId);
+        setTimeout(() => {
+          status.textContent = '';
+          document.getElementById(`reply-form-${postId}`).classList.remove('open');
+        }, 2000);
+      } catch (e) {
+        status.textContent = '❌ Error al enviar. Intenta de nuevo.';
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     function escapeHTML(str) {
@@ -1227,6 +1496,8 @@
           return;
         }
         container.innerHTML = posts.map(renderPost).join('');
+        // Cargar respuestas de cada post
+        posts.forEach(post => cargarRespuestas(post.id));
       } catch (e) {
         container.innerHTML = `<div class="foro-empty">Error al cargar mensajes. Verifica la configuración de Supabase.</div>`;
       }
