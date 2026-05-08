@@ -978,6 +978,103 @@
       margin-top: 0.25rem;
     }
 
+    /* ── HERRAMIENTAS PARA TI ── */
+    #herramientas {
+      background: var(--crema);
+    }
+
+    .herram-intro {
+      font-size: 1.05rem;
+      color: #555;
+      max-width: 620px;
+      line-height: 1.75;
+      margin-bottom: 3rem;
+    }
+
+    .herram-categoria {
+      margin-bottom: 3rem;
+    }
+
+    .herram-categoria-titulo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.5rem;
+      color: var(--azul);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 3px solid var(--amarillo);
+    }
+
+    .herram-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .herram-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 8px 32px var(--sombra);
+      border: 2px solid transparent;
+      text-decoration: none;
+      color: var(--texto);
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+    }
+
+    .herram-card:hover {
+      border-color: var(--amarillo);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(26, 58, 143, 0.18);
+    }
+
+    .herram-logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 18px;
+      flex-shrink: 0;
+    }
+
+    .herram-name {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      color: var(--azul);
+      text-align: center;
+    }
+
+    .herram-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--azul);
+      background: var(--amarillo);
+      padding: 0.2rem 0.75rem;
+      border-radius: 999px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .herram-arrow {
+      font-size: 0.82rem;
+      color: rgba(26,58,143,0.45);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: auto;
+    }
+
+    @media (max-width: 600px) {
+      .herram-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .herram-logo { width: 60px; height: 60px; }
+      .herram-card { padding: 1.25rem 1rem; gap: 0.75rem; }
+    }
+
     /* ── FOOTER ── */
     footer {
       background: var(--azul);
@@ -1197,7 +1294,8 @@
     <div class="nav-logo">🌱 Raíces en Movimiento</div>
     <ul class="nav-links">
       <li><a href="#sobre">El Proyecto</a></li>
-      <li><a href="#foro">Herramientas</a></li>
+      <li><a href="#herramientas">Herramientas</a></li>
+      <li><a href="#foro">Foro</a></li>
       <li><a href="#cartilla">Cartilla</a></li>
       <li><a href="#cartografia">Cartografía</a></li>
     </ul>
@@ -1275,10 +1373,60 @@
     </div>
   </section>
 
+  <!-- HERRAMIENTAS PARA TI -->
+  <section id="herramientas">
+    <div class="section-inner">
+      <div class="section-tag">02 ✦ Recursos</div>
+      <h2 class="section-title">Herramientas <span>para Ti</span></h2>
+      <p class="herram-intro">
+        Aquí encontrarás las apps y recursos que más le han servido a estudiantes foráneos para moverse,
+        organizarse y adaptarse a la vida en Bogotá.
+      </p>
+
+      <!-- MOVILIDAD -->
+      <div class="herram-categoria">
+        <div class="herram-categoria-titulo">
+          🚌 Movilidad
+        </div>
+        <div class="herram-grid">
+
+          <a class="herram-card" href="https://moovitapp.com/es" target="_blank" rel="noopener">
+            <img class="herram-logo" src="moovit.png" alt="Logo de Moovit" />
+            <span class="herram-name">Moovit</span>
+            <span class="herram-badge">Transporte público</span>
+            <span class="herram-arrow">↗ Abrir app</span>
+          </a>
+
+          <a class="herram-card" href="https://www.google.com/maps/@4.8758449,-74.0417624,15z?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">
+            <img class="herram-logo" src="maps.png" alt="Logo de Google Maps" />
+            <span class="herram-name">Google Maps</span>
+            <span class="herram-badge">Navegación</span>
+            <span class="herram-arrow">↗ Abrir app</span>
+          </a>
+
+          <a class="herram-card" href="https://www.waze.com/es/live-map/" target="_blank" rel="noopener">
+            <img class="herram-logo" src="waze.png" alt="Logo de Waze" />
+            <span class="herram-name">Waze</span>
+            <span class="herram-badge">Tráfico en vivo</span>
+            <span class="herram-arrow">↗ Abrir app</span>
+          </a>
+
+          <a class="herram-card" href="https://www.transmilenio.gov.co/comunicaciones/publicaciones/2019/planea-un-viaje-en-transmilenio-con-transmiapp" target="_blank" rel="noopener">
+            <img class="herram-logo" src="transmi.png" alt="Logo de TransMiApp" />
+            <span class="herram-name">TransMiApp</span>
+            <span class="herram-badge">TransMilenio</span>
+            <span class="herram-arrow">↗ Abrir app</span>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- FORO -->
   <section id="foro">
     <div class="section-inner">
-      <div class="section-tag">02 ✦ Herramientas</div>
+      <div class="section-tag">03 ✦ Foro</div>
       <h2 class="section-title">¿Qué otras <span>herramientas</span> recomendarías?</h2>
       <p class="foro-desc">
         Este es un espacio para compartir herramientas, apps, recursos o estrategias que te han ayudado en tu proceso de adaptación como estudiante foráneo en Bogotá. ¡Tu experiencia puede ser de mucha ayuda para otros!
@@ -1333,7 +1481,7 @@
   <!-- CARTILLA -->
   <section id="cartilla">
     <div class="section-inner">
-      <div class="section-tag">03 ✦ Cartilla</div>
+      <div class="section-tag">04 ✦ Cartilla</div>
       <h2 class="section-title">La <span>Cartilla</span> PASC</h2>
       <p style="color:#555;font-size:1.05rem;max-width:600px;line-height:1.7;">
         Aquí puedes explorar la cartilla del proyecto. Ábrela en pantalla completa o descárgala para consultarla cuando
@@ -1362,7 +1510,7 @@
   <!-- CARTOGRAFÍA SOCIAL -->
   <section id="cartografia">
     <div class="section-inner">
-      <div class="section-tag">04 ✦ Cartografía</div>
+      <div class="section-tag">05 ✦ Cartografía</div>
       <h2 class="section-title">Cartografía <span>Social</span></h2>
 
       <div class="cartografia-grid">
