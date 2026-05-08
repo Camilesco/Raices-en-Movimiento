@@ -1571,26 +1571,31 @@
     <div class="section-inner">
       <div class="section-tag">04 ✦ Cartilla</div>
       <h2 class="section-title">La <span>Cartilla</span> PASC</h2>
-      <p style="color:#555;font-size:1.05rem;max-width:600px;line-height:1.7;">
-        Aquí puedes explorar la cartilla del proyecto. Ábrela en pantalla completa o descárgala para consultarla cuando
-        quieras.
+      <p style="color:#555;font-size:1.05rem;max-width:600px;line-height:1.7;margin-bottom:1.5rem;">
+        Aquí puedes explorar la cartilla del proyecto. Descárgala para consultarla cuando quieras.
       </p>
 
-      <div class="book-container" id="book-container">
-        <div class="book-loading" id="book-loading">
-          <div class="book-spinner"></div>
-          <p id="book-loading-text">Preparando el libro digital...</p>
-        </div>
-        <div class="book-stage" id="book-stage" style="display:none;">
-          <div id="flip-book"></div>
-        </div>
-        <div class="book-controls" id="book-controls" style="display:none;">
-          <button class="book-ctrl-btn" onclick="flipPrev()">← Anterior</button>
-          <span class="book-page-info" id="book-page-info">1 / 11</span>
-          <button class="book-ctrl-btn" onclick="flipNext()">Siguiente →</button>
-          <button class="book-ctrl-btn" onclick="toggleBookFullscreen()">⛶ Pantalla completa</button>
-          <a class="book-ctrl-btn book-ctrl-download" href="cartilla.pdf" download="cartilla-raices-en-movimiento.pdf">⬇ Descargar</a>
-        </div>
+      <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+        <a href="Cartilla foráneos Actualizada.pdf" download
+          style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--azul);color:#fff;font-family:'Fredoka One',cursive;font-size:1rem;padding:0.7rem 1.8rem;border-radius:12px;text-decoration:none;box-shadow:0 4px 16px var(--sombra);transition:transform 0.15s,box-shadow 0.15s;"
+          onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+          ⬇ Descargar PDF
+        </a>
+        <a href="Cartilla foráneos Actualizada.pdf" target="_blank"
+          style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--amarillo);color:var(--azul);font-family:'Fredoka One',cursive;font-size:1rem;padding:0.7rem 1.8rem;border-radius:12px;text-decoration:none;box-shadow:0 4px 16px rgba(245,200,0,0.3);transition:transform 0.15s;"
+          onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+          ↗ Abrir en nueva pestaña
+        </a>
+      </div>
+
+      <div style="border-radius:20px;overflow:hidden;box-shadow:0 12px 48px var(--sombra);border:3px solid var(--amarillo);">
+        <iframe
+          src="Cartilla foráneos Actualizada.pdf"
+          width="100%"
+          height="820"
+          style="display:block;border:none;"
+          title="Cartilla Foráneos Actualizada"
+        ></iframe>
       </div>
     </div>
   </section>
