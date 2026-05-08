@@ -122,7 +122,7 @@
       left: 0;
       right: 0;
       height: 80px;
-      background: linear-gradient(to right, var(--amarillo) 0%, var(--amarillo) 50%, var(--rojo) 50%, var(--rojo) 66%, var(--azul) 66%, var(--azul) 100%);
+      background: linear-gradient(to right, var(--amarillo) 0%, var(--amarillo) 50%, var(--azul) 50%, var(--azul) 66%, var(--rojo) 66%, var(--rojo) 100%);
       clip-path: ellipse(110% 100% at 50% 100%);
     }
 
@@ -181,7 +181,6 @@
     }
 
     .hero-icon-card:hover {
-      transform: translateY(-6px) rotate(-3deg);
       border-color: var(--amarillo);
     }
 
@@ -1198,7 +1197,7 @@
     <div class="nav-logo">🌱 Raíces en Movimiento</div>
     <ul class="nav-links">
       <li><a href="#sobre">El Proyecto</a></li>
-      <li><a href="#foro">Foro</a></li>
+      <li><a href="#foro">Herramientas</a></li>
       <li><a href="#cartilla">Cartilla</a></li>
       <li><a href="#cartografia">Cartografía</a></li>
     </ul>
@@ -1279,11 +1278,10 @@
   <!-- FORO -->
   <section id="foro">
     <div class="section-inner">
-      <div class="section-tag">02 ✦ Foro</div>
-      <h2 class="section-title">Foro de <span>Estudiantes</span></h2>
+      <div class="section-tag">02 ✦ Herramientas</div>
+      <h2 class="section-title">¿Qué otras <span>herramientas</span> recomendarías?</h2>
       <p class="foro-desc">
-        Comparte herramientas que te han funcionado, plantea tus dudas sobre la adaptación a Bogotá y genera
-        conversación con otros estudiantes foráneos.
+        Este es un espacio para compartir herramientas, apps, recursos o estrategias que te han ayudado en tu proceso de adaptación como estudiante foráneo en Bogotá. ¡Tu experiencia puede ser de mucha ayuda para otros!
       </p>
 
       <div class="foro-box">
@@ -1312,7 +1310,7 @@
           <input type="text" id="input-ciudad-custom" class="full"
             placeholder="✍️ Escribe el nombre de tu ciudad" maxlength="40"
             style="display:none;" />
-          <textarea class="full" id="input-mensaje" placeholder="Escribe tu experiencia, consejo o pregunta..."
+          <textarea class="full" id="input-mensaje" placeholder="¿Qué herramienta, app, recurso o estrategia recomendarías? Cuéntanos cómo te ha ayudado..."
             maxlength="600"></textarea>
           <input class="full" type="text" id="input-clave"
             placeholder="🔑 Clave para borrar tu post después (guárdala bien)" maxlength="40" />
@@ -1320,7 +1318,7 @@
 
         <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
           <button class="btn-publicar" id="btn-publicar" onclick="publicar()">
-            ✦ Publicar en el foro
+            ✦ Compartir herramienta
           </button>
           <div class="foro-status" id="foro-status"></div>
         </div>
@@ -1518,8 +1516,8 @@
     <p style="font-size:0.82rem;">Hecho con ❤️ por y para estudiantes foráneos que construyen hogar en Bogotá.</p>
     <div class="footer-stripe">
       <div style="background:var(--amarillo);"></div>
+      <div style="background:var(--azul);"></div>
       <div style="background:var(--rojo);"></div>
-      <div style="background:var(--azul-claro);"></div>
     </div>
   </footer>
 
@@ -1857,7 +1855,7 @@
         document.getElementById('supabase-banner').style.display = 'none';
 
         if (!Array.isArray(posts) || posts.length === 0) {
-          container.innerHTML = `<div class="foro-empty">¡Sé el primero en compartir tu experiencia! 🌱</div>`;
+          container.innerHTML = `<div class="foro-empty">¡Sé el primero en compartir una herramienta! 🛠️</div>`;
           return;
         }
         container.innerHTML = posts.map(renderPost).join('');
