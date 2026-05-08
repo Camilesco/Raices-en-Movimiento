@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -1381,11 +1381,11 @@
     <div class="nav-logo">🌱 Raíces en Movimiento</div>
     <ul class="nav-links">
       <li><a href="#sobre">El Proyecto</a></li>
-      <li><a href="#herramientas">Herramientas</a></li>
-      <li><a href="#foro">Comentarios</a></li>
       <li><a href="#cartilla">Cartilla</a></li>
       <li><a href="#cartografia">Cartografía</a></li>
+      <li><a href="#herramientas">Herramientas</a></li>
       <li><a href="#apoyo">Apoyo</a></li>
+      <li><a href="#foro">Comentarios</a></li>
     </ul>
   </nav>
 
@@ -1412,7 +1412,8 @@
     <div class="hero-stripe"></div>
   </section>
 
-  <!-- SOBRE EL PROYECTO -->
+
+    <!-- SOBRE EL PROYECTO -->
   <section id="sobre">
     <div class="section-inner">
       <div class="sobre-grid">
@@ -1461,10 +1462,57 @@
     </div>
   </section>
 
-  <!-- HERRAMIENTAS PARA TI -->
+    <!-- CARTILLA -->
+  <section id="cartilla">
+    <div class="section-inner">
+      <div class="section-tag">02 ✦ Cartilla</div>
+      <h2 class="section-title">La <span>Cartilla</span> PASC</h2>
+      <p style="color:#555;font-size:1.05rem;max-width:600px;line-height:1.7;">
+        Aquí puedes explorar la cartilla del proyecto. Ábrela en pantalla completa o descárgala para consultarla cuando quieras.
+      </p>
+
+      <div class="book-container" id="book-container">
+        <div class="book-loading" id="book-loading">
+          <div class="book-spinner"></div>
+          <p id="book-loading-text">Preparando el libro digital...</p>
+        </div>
+        <div class="book-stage" id="book-stage" style="display:none;">
+          <div id="flip-book"></div>
+        </div>
+        <div class="book-controls" id="book-controls" style="display:none;">
+          <button class="book-ctrl-btn" onclick="flipPrev()">← Anterior</button>
+          <span class="book-page-info" id="book-page-info">1 / 1</span>
+          <button class="book-ctrl-btn" onclick="flipNext()">Siguiente →</button>
+          <button class="book-ctrl-btn" onclick="toggleBookFullscreen()">⛶ Pantalla completa</button>
+          <a class="book-ctrl-btn book-ctrl-download" href="Cartilla foráneos Actualizada.pdf" download="cartilla-raices-en-movimiento.pdf">⬇ Descargar</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- CARTOGRAFÍA SOCIAL -->
+  <section id="cartografia">
+    <div class="section-inner">
+      <div class="section-tag">03 ✦ Cartografía</div>
+      <h2 class="section-title">Cartografía <span>Social</span></h2>
+      <p style="font-size:1.15rem;color:#555;margin-bottom:2.5rem;font-weight:600;">
+        Cómo los estudiantes foráneos ven Bogotá
+      </p>
+
+      <div class="mapa-container" style="max-width:900px;margin:0 auto;">
+        <img
+          src="cartografiaActualizada.png"
+          alt="Cartografía social de Bogotá elaborada por estudiantes foráneos universitarios"
+          style="width:100%;display:block;"
+        />
+      </div>
+    </div>
+  </section>
+
+    <!-- HERRAMIENTAS PARA TI -->
   <section id="herramientas">
     <div class="section-inner">
-      <div class="section-tag">02 ✦ Recursos</div>
+      <div class="section-tag">04 ✦ Recursos</div>
       <h2 class="section-title">Herramientas <span>para Ti</span></h2>
       <p class="herram-intro">
         Aquí encontrarás las apps y recursos que más le han servido a estudiantes foráneos para moverse,
@@ -1511,112 +1559,10 @@
     </div>
   </section>
 
-  <!-- FORO -->
-  <section id="foro">
-    <div class="section-inner">
-      <div class="section-tag">03 ✦ Comentarios</div>
-      <h2 class="section-title">¿Qué otras <span>herramientas</span> recomendarías?</h2>
-      <p class="foro-desc">
-        Este es un espacio para compartir herramientas, apps, recursos o estrategias que te han ayudado en tu proceso de adaptación como estudiante foráneo en Bogotá. ¡Tu experiencia puede ser de mucha ayuda para otros!
-      </p>
-
-      <div class="foro-box">
-        <div class="supabase-banner" id="supabase-banner">
-          ⚙️ <strong>Configuración pendiente:</strong> el foro necesita conectarse a Supabase para persistir los
-          mensajes. Sigue las instrucciones del <code>README.md</code> y actualiza las variables
-          <code>SUPABASE_URL</code> y <code>SUPABASE_KEY</code> en el <code>config.js</code>.
-        </div>
-
-        <div class="foro-form">
-          <input type="text" id="input-nombre" placeholder="Tu nombre o apodo" maxlength="40" />
-          <select id="input-ciudad" onchange="toggleCiudadInput()">
-            <option value="">¿De qué ciudad eres?</option>
-            <option>Medellín</option>
-            <option>Cali</option>
-            <option>Barranquilla</option>
-            <option>Cartagena</option>
-            <option>Bucaramanga</option>
-            <option>Manizales</option>
-            <option>Pereira</option>
-            <option>Pasto</option>
-            <option>Santa Marta</option>
-            <option>Ibagué</option>
-            <option value="Otra ciudad">Otra ciudad…</option>
-          </select>
-          <input type="text" id="input-ciudad-custom" class="full"
-            placeholder="✍️ Escribe el nombre de tu ciudad" maxlength="40"
-            style="display:none;" />
-          <textarea class="full" id="input-mensaje" placeholder="¿Qué herramienta, app, recurso o estrategia recomendarías? Cuéntanos cómo te ha ayudado..."
-            maxlength="600"></textarea>
-          <input class="full" type="text" id="input-clave"
-            placeholder="🔑 Clave para borrar tu post después (guárdala bien)" maxlength="40" />
-        </div>
-
-        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-          <button class="btn-publicar" id="btn-publicar" onclick="publicar()">
-            ✦ Compartir herramienta
-          </button>
-          <div class="foro-status" id="foro-status"></div>
-        </div>
-
-        <div class="foro-posts" id="foro-posts">
-          <div class="foro-empty">Cargando mensajes del foro...</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CARTILLA -->
-  <section id="cartilla">
-    <div class="section-inner">
-      <div class="section-tag">04 ✦ Cartilla</div>
-      <h2 class="section-title">La <span>Cartilla</span> PASC</h2>
-      <p style="color:#555;font-size:1.05rem;max-width:600px;line-height:1.7;">
-        Aquí puedes explorar la cartilla del proyecto. Ábrela en pantalla completa o descárgala para consultarla cuando quieras.
-      </p>
-
-      <div class="book-container" id="book-container">
-        <div class="book-loading" id="book-loading">
-          <div class="book-spinner"></div>
-          <p id="book-loading-text">Preparando el libro digital...</p>
-        </div>
-        <div class="book-stage" id="book-stage" style="display:none;">
-          <div id="flip-book"></div>
-        </div>
-        <div class="book-controls" id="book-controls" style="display:none;">
-          <button class="book-ctrl-btn" onclick="flipPrev()">← Anterior</button>
-          <span class="book-page-info" id="book-page-info">1 / 1</span>
-          <button class="book-ctrl-btn" onclick="flipNext()">Siguiente →</button>
-          <button class="book-ctrl-btn" onclick="toggleBookFullscreen()">⛶ Pantalla completa</button>
-          <a class="book-ctrl-btn book-ctrl-download" href="Cartilla foráneos Actualizada.pdf" download="cartilla-raices-en-movimiento.pdf">⬇ Descargar</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CARTOGRAFÍA SOCIAL -->
-  <section id="cartografia">
-    <div class="section-inner">
-      <div class="section-tag">05 ✦ Cartografía</div>
-      <h2 class="section-title">Cartografía <span>Social</span></h2>
-      <p style="font-size:1.15rem;color:#555;margin-bottom:2.5rem;font-weight:600;">
-        Cómo los estudiantes foráneos ven Bogotá
-      </p>
-
-      <div class="mapa-container" style="max-width:900px;margin:0 auto;">
-        <img
-          src="cartografiaActualizada.png"
-          alt="Cartografía social de Bogotá elaborada por estudiantes foráneos universitarios"
-          style="width:100%;display:block;"
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- LÍNEAS DE APOYO -->
+    <!-- LÍNEAS DE APOYO -->
   <section id="apoyo">
     <div class="section-inner">
-      <div class="section-tag">06 ✦ Bienestar</div>
+      <div class="section-tag">05 ✦ Bienestar</div>
       <h2 class="section-title">Líneas de <span>Apoyo</span></h2>
       <p class="apoyo-intro">
         Si estás atravesando momentos difíciles, no estás solo/a. Estas son las líneas y programas de apoyo
@@ -1679,6 +1625,61 @@
           <span class="apoyo-cta">↗ Ir al programa</span>
         </a>
 
+      </div>
+    </div>
+  </section>
+
+    <!-- FORO -->
+  <section id="foro">
+    <div class="section-inner">
+      <div class="section-tag">06 ✦ Comentarios</div>
+      <h2 class="section-title">¿Qué otras <span>herramientas</span> recomendarías?</h2>
+      <p class="foro-desc">
+        Este es un espacio para compartir herramientas, apps, recursos o estrategias que te han ayudado en tu proceso de adaptación como estudiante foráneo en Bogotá. ¡Tu experiencia puede ser de mucha ayuda para otros!
+      </p>
+
+      <div class="foro-box">
+        <div class="supabase-banner" id="supabase-banner">
+          ⚙️ <strong>Configuración pendiente:</strong> el foro necesita conectarse a Supabase para persistir los
+          mensajes. Sigue las instrucciones del <code>README.md</code> y actualiza las variables
+          <code>SUPABASE_URL</code> y <code>SUPABASE_KEY</code> en el <code>config.js</code>.
+        </div>
+
+        <div class="foro-form">
+          <input type="text" id="input-nombre" placeholder="Tu nombre o apodo" maxlength="40" />
+          <select id="input-ciudad" onchange="toggleCiudadInput()">
+            <option value="">¿De qué ciudad eres?</option>
+            <option>Medellín</option>
+            <option>Cali</option>
+            <option>Barranquilla</option>
+            <option>Cartagena</option>
+            <option>Bucaramanga</option>
+            <option>Manizales</option>
+            <option>Pereira</option>
+            <option>Pasto</option>
+            <option>Santa Marta</option>
+            <option>Ibagué</option>
+            <option value="Otra ciudad">Otra ciudad…</option>
+          </select>
+          <input type="text" id="input-ciudad-custom" class="full"
+            placeholder="✍️ Escribe el nombre de tu ciudad" maxlength="40"
+            style="display:none;" />
+          <textarea class="full" id="input-mensaje" placeholder="¿Qué herramienta, app, recurso o estrategia recomendarías? Cuéntanos cómo te ha ayudado..."
+            maxlength="600"></textarea>
+          <input class="full" type="text" id="input-clave"
+            placeholder="🔑 Clave para borrar tu post después (guárdala bien)" maxlength="40" />
+        </div>
+
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <button class="btn-publicar" id="btn-publicar" onclick="publicar()">
+            ✦ Compartir herramienta
+          </button>
+          <div class="foro-status" id="foro-status"></div>
+        </div>
+
+        <div class="foro-posts" id="foro-posts">
+          <div class="foro-empty">Cargando mensajes del foro...</div>
+        </div>
       </div>
     </div>
   </section>
